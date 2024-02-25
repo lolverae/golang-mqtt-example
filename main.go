@@ -41,9 +41,6 @@ func main() {
       log.Fatal(err)
     }
   }()
-
-  // Run server until interrupted
   <-done
 
-  // Cleanup
 }
