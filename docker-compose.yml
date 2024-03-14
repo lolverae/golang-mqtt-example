@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  mqtt-server:
+    build: server
+    ports:
+      - "1883:1883"
+
+  mqtt-client:
+    build: client
+    depends_on:
+      - mqtt-server
+
