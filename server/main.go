@@ -1,8 +1,6 @@
 package main
 
-import(
-  "mqtt-example/server"
-)
+import mqttserver "mqtt-example/pkg"
 
 func main() {
   mqttserver.InitMqttServer()
