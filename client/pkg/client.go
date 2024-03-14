@@ -1,8 +1,10 @@
 package mqttclient
 
 import (
-  "fmt"
-  mqtt "github.com/eclipse/paho.mqtt.golang"
+	"fmt"
+	"time"
+
+	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
 
 var messagePubHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
@@ -32,5 +34,26 @@ func InitMqttClient() {
     if token := client.Connect(); token.Wait() && token.Error() != nil {
         panic(token.Error())
   }
+    sub(client)
+    publish(client)
+
+    client.Disconnect(250)
+}
+
+func sub(client mqtt.Client) {
+    topic := "topic/test"
+    token := client.Subscribe(topic, 1, nil)
+    token.Wait()
+    fmt.Printf("Subscribed to topic %s", topic)
+}
+
+func publish(client mqtt.Client) {
+    num := 10
+    for i := 0; i < num; i++ {
+        text := fmt.Sprintf("Message %d", i)
+        token := client.Publish("topic/test", 0, false, text)
+        token.Wait()
+        time.Sleep(time.Second)
+    }
 }
 
