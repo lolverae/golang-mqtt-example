@@ -3,5 +3,7 @@ package main
 import mqttclient "main/pkg"
 
 func main() {
-  mqttclient.InitMqttClient()
+  topic  := "topic/waterevent"
+  broker := "broker.emqx.io"
+  mqttclient.InitMqttClient(broker, topic)
 }

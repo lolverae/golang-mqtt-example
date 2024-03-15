@@ -1,18 +1,27 @@
 package mqttclient
 
 import (
-  "log"
-  "fmt"
+	"fmt"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
 
-func onMessageReceived(client mqtt.Client, message mqtt.Message) {
-	fmt.Printf("Received message: %s from topic: %s\n", message.Payload(), message.Topic())
-}
 
-func sub(client mqtt.Client) {
-    topic := "topic/waterevent"
-    token := client.Subscribe(topic, 1, nil)
-    token.Wait()
-    log.Printf("Subscribed to topic %s", topic)
+func SubscribeToTopic(topic string, client mqtt.Client) {
+
+	if token := client.Subscribe(topic, 0, onMessageReceived); token.Wait() && token.Error() != nil {
+		log.Fatal(fmt.Sprintf("Error subscribing to topic: %v", token.Error()))
+	}
+
+  log.Printf("Subscribed to topic %s", topic)
+
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+	<-sigChan
+
+	client.Unsubscribe(topic)
 }
