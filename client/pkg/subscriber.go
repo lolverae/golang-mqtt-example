@@ -10,10 +10,9 @@ import (
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
 
-
 func SubscribeToTopic(topic string, client mqtt.Client) {
 
-	if token := client.Subscribe(topic, 0, onMessageReceived); token.Wait() && token.Error() != nil {
+	if token := client.Subscribe(topic, 0, messagePubHandler); token.Wait() && token.Error() != nil {
 		log.Fatal(fmt.Sprintf("Error subscribing to topic: %v", token.Error()))
 	}
 
@@ -25,3 +24,4 @@ func SubscribeToTopic(topic string, client mqtt.Client) {
 
 	client.Unsubscribe(topic)
 }
+

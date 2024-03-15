@@ -12,8 +12,8 @@ func InitMqttClient(broker, topic string) {
   opts := mqtt.NewClientOptions()
   opts.AddBroker(fmt.Sprintf("tcp://%s:1883", broker))
   opts.SetClientID("go_mqtt_client")
-  opts.SetUsername("emqx")
-  opts.SetPassword("public")
+  opts.SetUsername("username")
+  opts.SetPassword("secretpassword")
   opts.SetDefaultPublishHandler(messagePubHandler)
   opts.OnConnect = connectHandler
   opts.OnConnectionLost = connectLostHandler
