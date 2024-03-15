@@ -1,46 +1,35 @@
 package mqttserver
 
 import (
-  "log"
-  "syscall"
-  "os"
-  "os/signal"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
-  mqtt "github.com/mochi-mqtt/server/v2"
-  "github.com/mochi-mqtt/server/v2/hooks/auth"
-  "github.com/mochi-mqtt/server/v2/listeners"
+	mqtt "github.com/mochi-mqtt/server/v2"
+	"github.com/mochi-mqtt/server/v2/hooks/auth"
+	"github.com/mochi-mqtt/server/v2/listeners"
 )
 
-func InitMqttServer() {
-  // Create signals channel to run server until interrupted
+func StartMqttServer() {
   sigs := make(chan os.Signal, 1)
-  done := make(chan bool, 1)
-  signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
-  go func() {
-    <-sigs
-    done <- true
-  }()
+  signal.Notify(sigs, os.Interrupt, syscall.SIGTERM)
 
-  // Create the new MQTT Server.
   server := mqtt.New(nil)
-  
-  // Allow all connections.
-  _ = server.AddHook(new(auth.AllowHook), nil)
-  
-  // Create a TCP listener on a standard port.
-  tcp := listeners.NewTCP("t1", ":1883", nil)
-  err := server.AddListener(tcp)
+  server.AddHook(new(auth.AllowHook), nil) 
+
+  tcpListener := listeners.NewTCP("t1", ":1883", nil)
+  if err := server.AddListener(tcpListener); err != nil {
+      log.Printf("failed to add TCP listener: %v", err)
+  }
+
+  err := server.Serve()
   if err != nil {
     log.Fatal(err)
   }
-  
-
-  go func() {
-    err := server.Serve()
-    if err != nil {
-      log.Fatal(err)
-    }
-  }()
-  <-done
+	
+  sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+	<-sigChan
 
 }
