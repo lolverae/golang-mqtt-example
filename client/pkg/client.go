@@ -14,9 +14,9 @@ func InitMqttClient(broker, topic string) {
   opts.SetClientID("go_mqtt_client")
   opts.SetUsername("username")
   opts.SetPassword("secretpassword")
-  opts.SetDefaultPublishHandler(messagePubHandler)
-  opts.OnConnect = connectHandler
-  opts.OnConnectionLost = connectLostHandler
+  opts.SetDefaultPublishHandler(MessagePubHandler)
+  opts.OnConnect = ConnectHandler
+  opts.OnConnectionLost = ConnectLostHandler
 
   client := mqtt.NewClient(opts)
   if token := client.Connect(); token.Wait() && token.Error() != nil {

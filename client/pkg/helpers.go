@@ -10,10 +10,10 @@ var MessagePubHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Me
 }
 
 var ConnectHandler mqtt.OnConnectHandler = func(client mqtt.Client) {
-  log.Printf("Connected")
+  log.Printf("Connected to broker")
 }
 
 var ConnectLostHandler mqtt.ConnectionLostHandler = func(client mqtt.Client, err error) {
-  log.Printf("Connect lost: %v", err)
+  log.Printf("Connection to broker lost: %v", err)
 }
 

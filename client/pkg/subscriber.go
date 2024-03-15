@@ -12,7 +12,7 @@ import (
 
 func SubscribeToTopic(topic string, client mqtt.Client) {
 
-	if token := client.Subscribe(topic, 0, messagePubHandler); token.Wait() && token.Error() != nil {
+	if token := client.Subscribe(topic, 0, MessagePubHandler); token.Wait() && token.Error() != nil {
 		log.Fatal(fmt.Sprintf("Error subscribing to topic: %v", token.Error()))
 	}
 
