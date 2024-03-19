@@ -25,6 +25,11 @@ func StartMqttServer() {
             "water/#":   auth.ReadWrite,
           },
         },
+      {
+        Filters: auth.Filters{
+          "#": auth.Deny,
+        },
+      },
       },
   }
 
