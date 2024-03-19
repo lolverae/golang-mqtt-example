@@ -17,7 +17,14 @@ func StartMqttServer() {
 
 	authRules := &auth.Ledger{
       Auth: auth.AuthRules{
-        {Username: "peach", Password: "password1", Allow: true},
+        {Username: "username", Password: "secretpassword", Allow: true},
+      },
+      ACL: auth.ACLRules{
+        {
+          Username: "username", Filters: auth.Filters{
+            "water/#":   auth.ReadWrite,
+          },
+        },
       },
   }
 
